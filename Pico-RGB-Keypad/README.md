@@ -1,5 +1,9 @@
 # Pico-RGB-Keypad <a href='https://ko-fi.com/christianjameswatkins' target='_blank'><img height='35' align='right' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=1' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
+This project used the [Pico RGB Keypad Base](https://shop.pimoroni.com/products/pico-rgb-keypad-base?variant=32369517166675) as a 4 layerd, 12 key macro keypad (4 * 12 = 48 usable keys).
+
+![image](https://github.com/user-attachments/assets/438fed37-d691-4ad6-a2e1-42421bc10cae)
+
 ## Circuit Python installation
 The Pico comes with micro python installed, but at the time I wrote the software, micro-python did not yet fully support the key-pad, so I installed Adafruit’s circuit python onto the Pico. Here are the instructions, original credit for these go to ColinD from the Pimoroni forums, I have updated them here:
 
