@@ -1,4 +1,4 @@
-# Pico-RGB-Keypad <a href='https://ko-fi.com/cjgameslive' target='_blank'><img height='35' align='right' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=1' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+# Pico-RGB-Keypad <a href='https://ko-fi.com/christianjameswatkins' target='_blank'><img height='35' align='right' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=1' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 ## Circuit Python installation
 The Pico comes with micro python installed, but at the time I wrote the software, micro-python did not yet fully support the key-pad, so I installed Adafruit’s circuit python onto the Pico. Here are the instructions, original credit for these go to ColinD from the Pimoroni forums, I have updated them here:
