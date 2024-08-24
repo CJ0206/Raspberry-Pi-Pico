@@ -89,6 +89,6 @@ usb_hid.set_interface_name("CJs Macro Pad")
 
 The above change does not always work due to the vendor and product ID's, from a comment on GitHub I decided to try and set my own using their example which worked. You can decide your own name and manufacturer, make sure any VID or PID you set is valid or you will get an error in `boot_output.txt` (note `import supervisor` needs to be at the top of the file):
 ```
-supervisor.set_usb_identification(manufacturer='CJ', product='CJs Macro Pad', vid=0xC107, pid=0x1316)
+supervisor.set_usb_identification(manufacturer='CJ', product='CJs Macro Pad', vid=0xC116, pid=0x1316)
 ```
-I went for a vendor ID of C 10 (J) 07 (G) for CJ Games and a product ID of 13 (M) 16 (P) for Macro Pad.
+I went for a vendor ID of C 10 (J) 16 (P) for CJ Pico and a product ID of 13 (M) 16 (P) for Macro Pad.
