@@ -26,7 +26,7 @@ cs = DigitalInOut(board.GP17)
 cs.direction = Direction.OUTPUT
 cs.value = 0
 num_pixels = 16
-pixels = adafruit_dotstar.DotStar(board.GP18, board.GP19, num_pixels, brightness=0.1, auto_write=True)
+pixels = adafruit_dotstar.DotStar(board.GP18, board.GP19, num_pixels, brightness=0.3, auto_write=True)
 i2c = busio.I2C(board.GP5, board.GP4)
 device = I2CDevice(i2c, 0x20)
 kbd = Keyboard(usb_hid.devices)
