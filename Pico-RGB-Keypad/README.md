@@ -34,7 +34,7 @@ the number [4] is the unique reference to the key and set. The first key set use
 
 The first entry on the right hand side of the `=` is either a Keyboard sequence of two or 3 keys separated by commas, or Text. So the above example sends CTRL+SHIFT+M. A full list of KeyCodes can be found [here](https://circuitpython.readthedocs.io/projects/hid/en/latest/api.html#adafruit-hid-keycode-keycode).
 
-For media control keys, these needed to be defined manually at the start of line 38, I have left a few unused common controls in the code which can be used or expanded upon. These can be seen on lined 189, 191, and 193:
+For media control keys, these needed to be defined manually at the start of line 38, I have left a few unused common controls in the code which can be used or expanded upon. These can be seen on line 189 - 195:
 
 ```
 button_set[13] = [234, 0, 0, _blue] # Volume Up
@@ -71,6 +71,12 @@ The second entry is 0 if we are sending Keycodes/HID Codes/ConsumerControlCode o
 The third entry determines if the key latches [0 = no, 1 = yes], this determines the behaviour of the LED under the key. If the key is set to latch, then the LED will toggle every time the key is pressed. If the key is set to not latch, then the LED will light for a short period of time when pressed and then go out.
 
 The last entry is a RGB tuple (e.g. `(124,125,126)` or the colours defined from row 155 `_red = (255, 0, 0)`) which configures the colour the LED turns to when the key is pressed.
+
+If you find the LEDs too dim, or too bright, just amend the brightness on line 29 from `0.3` to anything between 0 (off) and 1 (full brightness):
+
+```
+pixels = adafruit_dotstar.DotStar(board.GP18, board.GP19, num_pixels, brightness=0.3, auto_write=True)
+```
 
 ## boot.py
 `boot.py` runs before `code.py` is run by the micro controller, it seems to make things a little unreliable in my testing on a USB hub so use at your own risk and ensure you have a backup of your code/library before experimenting. It seems to work fine plugged directly into the PC.
