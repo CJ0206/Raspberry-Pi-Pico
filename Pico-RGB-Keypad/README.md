@@ -98,3 +98,6 @@ The above change does not always work due to the vendor and product ID's, from a
 supervisor.set_usb_identification(manufacturer='CJ', product='CJs Macro Pad', vid=0xC116, pid=0x1316)
 ```
 I went for a vendor ID of C 10 (J) 16 (P) for CJ Pico and a product ID of 13 (M) 16 (P) for Macro Pad.
+
+## safemode.py
+This file is completely optional, if an error occurs and forces the Pico into safe mode it will reboot the board as if a reset button has been pressed. This will hopfully mitigate any errors caused by a dodgy USB cable or hub and allow the board to boot correctly on the second attempt.
