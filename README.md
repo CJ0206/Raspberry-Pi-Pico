@@ -15,3 +15,9 @@ This project uses a 16x2 I2C LCD display connected to a Pico W to show a predefi
 This project used the [Pico RGB Keypad Base](https://shop.pimoroni.com/products/pico-rgb-keypad-base?variant=32369517166675) as a multi layerd macro keypad. See the [project page](Pico-RGB-Keypad).
 
 ![image](https://github.com/user-attachments/assets/438fed37-d691-4ad6-a2e1-42421bc10cae)
+
+## [Pico RTC](Pico-RTC)
+
+This project uses a 16x2 I2C LCD display connected to a Pico W to show the current date and time in the UK, it should automatically adjust between GMT and BST. See the [project page](Pico-RTC).
+
+![image](https://github.com/CJ0206/Raspberry-Pi-Pico/assets/8594588/86e343ee-9220-401e-8f7f-2fea7113c469)
