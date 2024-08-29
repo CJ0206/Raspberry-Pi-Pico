@@ -1,6 +1,6 @@
 # Pico RTC <a href='https://ko-fi.com/christianjameswatkins' target='_blank'><img height='35' align='right' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=1' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
-This project uses a 16x2 I2C LCD display connected to a Pico W to show the current date and time synchronized from an NTP host
+This project uses a 16x2 I2C LCD display connected to a Pico W to show the current date and time synchronized from an NTP host.
 
 ## 16×2 I2C LCD Display
 
