@@ -208,9 +208,9 @@ button_set[7] = ["Keycode.CONTROL,Keycode.SHIFT,Keycode.H", 0, 0, _red] # Leave 
 #button_set[25]
 #button_set[21]
 
-#button_set[30]
+button_set[30] = ["Keycode.CONTROL,Keycode.Z", 0, 0, _blue] # Undo
 #button_set[26]
-#button_set[22]
+button_set[22] = ["Keycode.CONTROL,Keycode.Y", 0, 0, _blue] # Redo
 
 button_set[31] = ["Keycode.CONTROL,Keycode.C", 0, 0, _blue] # Copy
 button_set[27] = ["Keycode.CONTROL,Keycode.X", 0, 0, _blue] # Cut
