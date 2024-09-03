@@ -158,7 +158,7 @@ def display_time_and_countdown():
         lcd.move_to(0, 1)
         lcd.putstr("{:02}:{:02}:{:02}".format(t[tm_hour], t[tm_min], t[tm_sec]))
         
-        # Display the vertical bar
+        # Display space before bell
         lcd.putstr("  ")
         
         # Display the bell character
@@ -167,6 +167,12 @@ def display_time_and_countdown():
         # Display the countdown
         countdown = calculate_countdown(t)
         lcd.putstr(countdown)
+
+        # Handle backlight
+        if t[tm_hour] == 23 and t[tm_min] == 0:
+            lcd.backlight_off()
+        elif t[tm_hour] == 7 and t[tm_min] == 30:
+            lcd.backlight_on()
         
         time.sleep(1)
 
@@ -240,4 +246,3 @@ while True:
     # Wait until next WiFi connect iteration
     wlan.active(False)
     time.sleep(5)
-
