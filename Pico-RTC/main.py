@@ -6,7 +6,6 @@ import time
 import struct
 import socket
 import machine
-
 from secrets import WIFI_SSID, WIFI_PASSWORD
 
 # Constants
@@ -28,6 +27,12 @@ tm_isdst = 8
 i2c = I2C(0, sda=Pin(0), scl=Pin(1), freq=400000)
 I2C_ADDR = i2c.scan()[0]
 lcd = I2cLcd(i2c, I2C_ADDR, 2, 16)
+
+# Define the custom bell character on one line
+bell_char = [0x00, 0x04, 0x0E, 0x0E, 0x0E, 0x1F, 0x00, 0x04]
+
+# Load the bell character into the LCD memory at position 0
+lcd.custom_char(0, bell_char)
 
 def format_time(t):
     # Format time tuple into a string
@@ -98,27 +103,91 @@ def req_attention():
         lcd.backlight_on()
         time.sleep(0.4)
 
-# Initialize display
-lcd.blink_cursor_on()
+def calculate_countdown(t):
+    # Ensure the time tuple has all 9 elements by filling missing elements with defaults
+    if len(t) < 9:
+        t = t + (0,) * (9 - len(t))
+
+    current_time = time.mktime(t)
+    
+    # Calculate the target times for 09:00 and 17:00 today
+    target_time_9 = time.mktime((t[tm_year], t[tm_mon], t[tm_mday], 9, 0, 0, t[tm_wday], t[tm_yday], t[tm_isdst]))
+    target_time_17 = time.mktime((t[tm_year], t[tm_mon], t[tm_mday], 17, 0, 0, t[tm_wday], t[tm_yday], t[tm_isdst]))
+
+    # Calculate the target time for 09:00 on the next weekday (Monday if today is Friday)
+    if t[tm_wday] == 4:  # Friday
+        target_time_9_next_weekday = time.mktime((t[tm_year], t[tm_mon], t[tm_mday] + 3, 9, 0, 0, 0, t[tm_yday] + 3, t[tm_isdst]))
+    else:
+        target_time_9_next_weekday = time.mktime((t[tm_year], t[tm_mon], t[tm_mday] + 1, 9, 0, 0, (t[tm_wday] + 1) % 7, t[tm_yday] + 1, t[tm_isdst]))
+
+    # Determine the appropriate countdown target
+    if t[tm_wday] >= 0 and t[tm_wday] <= 4:  # Monday to Friday
+        if current_time < target_time_9:
+            # Before 09:00, count down to 09:00 today
+            countdown_seconds = target_time_9 - current_time
+        elif current_time < target_time_17:
+            # Between 09:00 and 17:00, count down to 17:00 today
+            countdown_seconds = target_time_17 - current_time
+        else:
+            # After 17:00, count down to 09:00 the next weekday
+            countdown_seconds = target_time_9_next_weekday - current_time
+    else:  # Saturday and Sunday
+        # During the weekend, count down to 09:00 on Monday
+        target_time_monday_9 = time.mktime((t[tm_year], t[tm_mon], t[tm_mday] + (7 - t[tm_wday]), 9, 0, 0, 0, t[tm_yday] + (7 - t[tm_wday]), t[tm_isdst]))
+        countdown_seconds = target_time_monday_9 - current_time
+
+    # Convert seconds to hours and minutes
+    countdown_hours = int(countdown_seconds // 3600)
+    countdown_minutes = int((countdown_seconds % 3600) // 60)
+    
+    return "{:02}:{:02}".format(countdown_hours, countdown_minutes)
+
+def display_time_and_countdown():
+    last_date = ""
+    while True:
+        t = time.localtime()  # Fetch current local time from RTC
+        
+        # Update the date display if it has changed
+        new_date = "{:02}/{:02}/{}".format(t[tm_mday], t[tm_mon], t[tm_year])
+        if new_date != last_date:
+            lcd.move_to(0, 0)
+            lcd.putstr(new_date)
+            last_date = new_date
+        
+        # Time display
+        lcd.move_to(0, 1)
+        lcd.putstr("{:02}:{:02}:{:02}".format(t[tm_hour], t[tm_min], t[tm_sec]))
+        
+        # Display the vertical bar
+        lcd.putstr("  ")
+        
+        # Display the bell character
+        lcd.putchar(chr(0))
+        
+        # Display the countdown
+        countdown = calculate_countdown(t)
+        lcd.putstr(countdown)
+        
+        time.sleep(1)
+
+# Initialize display and define the bell character
+lcd.blink_cursor_off()
 lcd.backlight_on()
 lcd.clear()
+lcd.custom_char(0, bell_char)  # Load bell character into position 0
 
-# WiFi and synchronization settings
-max_wait = 10
-wifi_reconnect_time = 5
-wifi_wait_time = 5
-
+# Main loop to connect to WiFi and sync time, followed by the display logic
 while True:
     wifi_connected = False
     lcd.blink_cursor_on()
     lcd.show_cursor()
-    lcd.putstr("Connecting to Wifi...")
+    lcd.putstr("Connecting...")
     
     # Connect to WiFi
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(WIFI_SSID, WIFI_PASSWORD)
-    time.sleep(wifi_wait_time)
+    time.sleep(5)
     
     lcd.clear()
     lcd.putstr("Wifi connection:\n")
@@ -129,6 +198,7 @@ while True:
         lcd.clear()
         lcd.putstr("NTP sync...\n")
         
+        max_wait = 10
         while max_wait > 0:
             if wlan.status() < 0 or wlan.status() >= 3:
                 break
@@ -138,10 +208,10 @@ while True:
         if wlan.status() != 3:
             lcd.clear()
             lcd.putstr("WiFi error.\n")
-            lcd.putstr("Reconnect in " + str(wifi_reconnect_time) + "s")
+            lcd.putstr("Reconnect in 5s")
             req_attention()
             wlan.active(False)
-            time.sleep(wifi_reconnect_time)
+            time.sleep(5)
             continue
         else:
             lcd.clear()
@@ -161,23 +231,13 @@ while True:
                 lcd.putstr("Sync error.\n")
                 req_attention()
                 wlan.active(False)
-                time.sleep(wifi_reconnect_time)
+                time.sleep(5)
                 continue
         
         lcd.blink_cursor_off()
         lcd.hide_cursor()
-        last_date = ""
-        while True:
-            # Display date and time
-            t = time.localtime()  # Fetch current local time from RTC
-            new_date = "{:02}/{:02}/{}".format(t[tm_mday], t[tm_mon], t[tm_year])
-            if new_date != last_date:
-                lcd.move_to(0, 0)
-                lcd.putstr(new_date)
-                last_date = new_date
-            lcd.move_to(0, 1)
-            lcd.putstr("{:02}:{:02}:{:02}".format(t[tm_hour], t[tm_min], t[tm_sec]))
-            time.sleep(1)
+        display_time_and_countdown()
     # Wait until next WiFi connect iteration
     wlan.active(False)
-    time.sleep(wifi_reconnect_time)
+    time.sleep(5)
+
