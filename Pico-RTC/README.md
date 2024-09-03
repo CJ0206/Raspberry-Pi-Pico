@@ -22,3 +22,5 @@ The connection between the Raspberry Pi Pico and I2C LCD is straightforward as s
 ## MicroPython Code
 
 There isn't much code you can personalise in this project so I will just let you know that `secrets.py` is used to set up the Wi-Fi network by providing the SSID and password. You will need to update the Wi-Fi SSID and password in the code with your network details.
+
+`calculate_countdown` is used to create a countdown to 09:00 Monday to Friday (the time I start work), and 17:00 (the time I finish work) once it reaches 09:00. On Friday/Saturday/Sunday it will count down to 09:00 on the following Monday.
