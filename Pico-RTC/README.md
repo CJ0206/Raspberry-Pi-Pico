@@ -26,3 +26,6 @@ The connection between the Raspberry Pi Pico and I2C LCD is straightforward as s
 `calculate_countdown` is used to create a countdown to 09:00 Monday to Friday (the time I start work), and 17:00 (the time I finish work) once it reaches 09:00, and back to 09:00 when it reaches 17:00. On Friday/Saturday/Sunday it will count down to 09:00 on the following Monday.
 
 The `Handle backlight` section turns off the LCDs backlight between 23:00 and 07:30 so it doesn't disturb you at night.
+```
+if (t[tm_hour] >= 23 and t[tm_min] >= 00) or (t[tm_hour] < 7) or (t[tm_hour] == 7 and t[tm_min] < 30)
+```
