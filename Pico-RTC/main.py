@@ -144,6 +144,8 @@ def calculate_countdown(t):
 
 def display_time_and_countdown():
     last_date = ""
+    backlight_status = None  # Track the current backlight status
+
     while True:
         t = time.localtime()  # Fetch current local time from RTC
         
@@ -168,11 +170,17 @@ def display_time_and_countdown():
         countdown = calculate_countdown(t)
         lcd.putstr(countdown)
 
-        # Handle backlight
-        if t[tm_hour] == 23 and t[tm_min] == 0:
-            lcd.backlight_off()
-        elif t[tm_hour] == 7 and t[tm_min] == 30:
-            lcd.backlight_on()
+        # Handle backlight based on time range
+        if (t[tm_hour] >= 23 and t[tm_min] >= 00) or (t[tm_hour] < 7) or (t[tm_hour] == 7 and t[tm_min] < 30):
+            # Time is between 22:30 and 07:30 (next day), turn off the backlight
+            if backlight_status != "off":
+                lcd.backlight_off()
+                backlight_status = "off"
+        else:
+            # Time is between 07:30 and 22:30, turn on the backlight
+            if backlight_status != "on":
+                lcd.backlight_on()
+                backlight_status = "on"
         
         time.sleep(1)
 
